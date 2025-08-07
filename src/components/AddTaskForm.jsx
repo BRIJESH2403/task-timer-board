@@ -46,14 +46,14 @@ const AddTaskForm = ({ addTask }) => {
                 value={title}
                 onChange={(dets) => setTitle(dets.target.value)}
                 placeholder="Title"
-                required="true"
+                required={true}
                 className="p-2 rounded bg-slate-800 text-white outline-none"
               />
               <input
                 value={description}
                 onChange={(dets) => setDescription(dets.target.value)}
                 placeholder="Description"
-                required="true"
+                required={true}
                 className="p-2 rounded bg-slate-800 text-white outline-none"
               />
               <input

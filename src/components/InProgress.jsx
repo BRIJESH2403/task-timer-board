@@ -12,7 +12,8 @@ function InProgress({ tasks, handleDone, togglePause }) {
             Time Left:{" "}
             {Math.floor(task.remainingTime / 3600) > 0 &&
               `${Math.floor(task.remainingTime / 3600)} hr : `}
-            {Math.floor((task.remainingTime % 3600) / 60)} min
+            {Math.floor((task.remainingTime % 3600) / 60)} min{" "}
+            {Math.floor(task.remainingTime % 60)} sec
           </p>
           <div className="mt-2 flex gap-2">
             <button
