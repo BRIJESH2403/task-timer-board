@@ -9,9 +9,9 @@ const TodoList = ({ tasks, startTask }) => (
         <p>{task.description}</p>
         <p>
           Time:{" "}
-          {Math.floor(task.time / 60) > 0 &&
-            `${Math.floor(task.time / 60)} hr : `}
-          {task.time % 60} min
+          {Math.floor(task.remainingTime / 3600) > 0 &&
+            `${Math.floor(task.remainingTime / 3600)} hr : `}
+          {Math.floor((task.remainingTime % 3600) / 60)} min
         </p>
         <button
           onClick={() => startTask(i)}

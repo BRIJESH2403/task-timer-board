@@ -8,7 +8,7 @@ const AddTaskForm = ({ addTask }) => {
 
   const handleSubmit = (dets) => {
     dets.preventDefault();
-    if (!title || !description || !time || parseInt(time) <= 0) return;
+    if (!title || !description || !time) return;
     const newTask = {
       title,
       description,
