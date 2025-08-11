@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const AddTaskForm = ({ addTask }) => {
   const [title, setTitle] = useState("");
@@ -6,15 +6,20 @@ const AddTaskForm = ({ addTask }) => {
   const [time, setTime] = useState("");
   const [showForm, setShowForm] = useState(false);
 
-  const handleSubmit = (dets) => {
-    dets.preventDefault();
-    if (!title || !description || !time) return;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!title || !description) return;
+
     const newTask = {
+      id: Date.now(),
       title,
       description,
-      time: parseInt(time),
-      remainingTime: parseInt(time) * 60,
+      time: time ? parseInt(time) : null,
+      remainingTime: time ? parseInt(time) * 60 : null,
+      isRunning: false,
+      isExpired: false,
     };
+
     addTask(newTask);
     setTitle("");
     setDescription("");
@@ -44,23 +49,23 @@ const AddTaskForm = ({ addTask }) => {
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-6">
               <input
                 value={title}
-                onChange={(dets) => setTitle(dets.target.value)}
+                onChange={(e) => setTitle(e.target.value)}
                 placeholder="Title"
-                required={true}
+                required
                 className="p-2 rounded bg-slate-800 text-white outline-none"
               />
               <input
                 value={description}
-                onChange={(dets) => setDescription(dets.target.value)}
+                onChange={(e) => setDescription(e.target.value)}
                 placeholder="Description"
-                required={true}
+                required
                 className="p-2 rounded bg-slate-800 text-white outline-none"
               />
               <input
                 type="number"
                 min="1"
                 value={time}
-                onChange={(dets) => setTime(dets.target.value)}
+                onChange={(e) => setTime(e.target.value)}
                 placeholder="Time (minutes)"
                 className="p-2 rounded bg-slate-800 text-white outline-none"
               />

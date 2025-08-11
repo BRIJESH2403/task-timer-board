@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import AddTaskForm from "./components/AddTaskForm";
-import TodoList from "./components/TodoList";
+import TodoList from "./components/Todolist";
 import InProgress from "./components/InProgress";
 import Done from "./components/Done";
 
@@ -10,41 +10,44 @@ const App = () => {
   const [doneTasks, setDoneTasks] = useState([]);
 
   const addTask = (task) => {
-    setTodoTasks([...todoTasks, task]);
+    setTodoTasks((prev) => [...prev, task]);
   };
 
-  const startTask = (index) => {
-    const task = todoTasks[index];
-    setTodoTasks(todoTasks.filter((_, i) => i !== index));
-    setInProgressTasks([...inProgressTasks, { ...task, isRunning: true }]);
+  const startTask = (id) => {
+    const task = todoTasks.find((t) => t.id === id);
+    if (!task) return;
+    setTodoTasks((prev) => prev.filter((t) => t.id !== id));
+    setInProgressTasks((prev) => [...prev, { ...task, isRunning: true }]);
   };
 
-  const handleDone = (index) => {
-    const task = inProgressTasks[index];
-    setInProgressTasks(inProgressTasks.filter((_, i) => i !== index));
-    setDoneTasks([...doneTasks, task]);
+  const handleDone = (id) => {
+    const task = inProgressTasks.find((t) => t.id === id);
+    if (!task || task.isExpired) return; // Don't move expired tasks
+    setInProgressTasks((prev) => prev.filter((t) => t.id !== id));
+    setDoneTasks((prev) => [...prev, task]);
   };
 
-  const togglePause = (index) => {
-    const updated = [...inProgressTasks];
-    updated[index].isRunning = !updated[index].isRunning;
-    setInProgressTasks(updated);
+  const togglePause = (id) => {
+    setInProgressTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, isRunning: !t.isRunning } : t))
+    );
+  };
+
+  const deleteTask = (id) => {
+    setDoneTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
   useEffect(() => {
     const interval = setInterval(() => {
       setInProgressTasks((prev) =>
-        prev
-          .map((task) => {
-            if (task.isRunning && task.remainingTime > 0) {
-              return { ...task, remainingTime: task.remainingTime - 1 };
-            } else if (task.remainingTime === 0) {
-              setDoneTasks((done) => [...done, task]);
-              return null;
-            }
-            return task;
-          })
-          .filter(Boolean)
+        prev.map((task) => {
+          if (task.isRunning && task.remainingTime > 0) {
+            return { ...task, remainingTime: task.remainingTime - 1 };
+          } else if (task.remainingTime === 0 && !task.isExpired) {
+            return { ...task, isRunning: false, isExpired: true };
+          }
+          return task;
+        })
       );
     }, 1000);
 
@@ -62,8 +65,9 @@ const App = () => {
           handleDone={handleDone}
           togglePause={togglePause}
         />
-        <Done tasks={doneTasks} />
+        <Done tasks={doneTasks} deleteTask={deleteTask} />
       </div>
+
       <div className="flex justify-center mt-10">
         <AddTaskForm addTask={addTask} />
       </div>
