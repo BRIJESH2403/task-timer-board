@@ -7,10 +7,8 @@ import Done from "./components/Done";
 const App = () => {
   const [tasks, setTasks] = useState([]);
 
-  // Search text for title
   const [searchText, setSearchText] = useState("");
 
-  // Status filter: "all", "todo", "in-progress", "done"
   const [statusFilter, setStatusFilter] = useState("all");
 
   const addTask = (task) => {
@@ -79,7 +77,6 @@ const App = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Filter tasks based on searchText and statusFilter
   const filteredTasks = tasks.filter((task) => {
     const matchesTitle = task.title
       .toLowerCase()
@@ -91,7 +88,6 @@ const App = () => {
     return matchesTitle && matchesStatus;
   });
 
-  // Separate filtered tasks by status for passing to components
   const todoTasks = filteredTasks.filter((task) => task.status === "todo");
   const inProgressTasks = filteredTasks.filter(
     (task) => task.status === "in-progress"
@@ -102,7 +98,6 @@ const App = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-800 to-gray-900 text-white px-4 py-8">
       <h1 className="text-4xl font-bold text-center mb-8">Task Timer Board</h1>
 
-      {/* Filter/Search bar */}
       <div className="flex flex-col md:flex-row justify-center items-center gap-4 mb-8">
         <input
           type="text"
