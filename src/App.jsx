@@ -5,46 +5,67 @@ import InProgress from "./components/InProgress";
 import Done from "./components/Done";
 
 const App = () => {
-  const [todoTasks, setTodoTasks] = useState([]);
-  const [inProgressTasks, setInProgressTasks] = useState([]);
-  const [doneTasks, setDoneTasks] = useState([]);
+  const [tasks, setTasks] = useState([]);
 
   const addTask = (task) => {
-    setTodoTasks((prev) => [...prev, task]);
+    setTasks((prev) => [...prev, task]);
   };
 
   const startTask = (id) => {
-    const task = todoTasks.find((t) => t.id === id);
-    if (!task) return;
-    setTodoTasks((prev) => prev.filter((t) => t.id !== id));
-    setInProgressTasks((prev) => [...prev, { ...task, isRunning: true }]);
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id
+          ? { ...task, status: "in-progress", isRunning: true }
+          : task
+      )
+    );
   };
 
   const handleDone = (id) => {
-    const task = inProgressTasks.find((t) => t.id === id);
-    if (!task || task.isExpired) return; // Don't move expired tasks
-    setInProgressTasks((prev) => prev.filter((t) => t.id !== id));
-    setDoneTasks((prev) => [...prev, task]);
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, status: "done", isRunning: false } : task
+      )
+    );
   };
 
   const togglePause = (id) => {
-    setInProgressTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, isRunning: !t.isRunning } : t))
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, isRunning: !task.isRunning } : task
+      )
     );
   };
 
   const deleteTask = (id) => {
-    setDoneTasks((prev) => prev.filter((t) => t.id !== id));
+    setTasks((prev) => prev.filter((task) => task.id !== id));
   };
+
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setInProgressTasks((prev) =>
+      setTasks((prev) =>
         prev.map((task) => {
-          if (task.isRunning && task.remainingTime > 0) {
-            return { ...task, remainingTime: task.remainingTime - 1 };
-          } else if (task.remainingTime === 0 && !task.isExpired) {
-            return { ...task, isRunning: false, isExpired: true };
+          if (
+            task.status === "in-progress" &&
+            task.isRunning &&
+            task.remainingTime > 0
+          ) {
+            return {
+              ...task,
+              remainingTime: task.remainingTime - 1,
+            };
+          }
+          else if (
+            task.status === "in-progress" &&
+            task.remainingTime === 0 &&
+            task.isRunning
+          ) {
+            return {
+              ...task,
+              isRunning: false,
+              remainingTime: 0,
+            };
           }
           return task;
         })
@@ -53,6 +74,10 @@ const App = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  const todoTasks = tasks.filter((task) => task.status === "todo");
+  const inProgressTasks = tasks.filter((task) => task.status === "in-progress");
+  const doneTasks = tasks.filter((task) => task.status === "done");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-800 to-gray-900 text-white px-4 py-8">

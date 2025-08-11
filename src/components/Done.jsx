@@ -13,6 +13,7 @@ const Done = ({ tasks, deleteTask }) => {
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-4">Done</h2>
+      {tasks.length === 0 && <p>No completed tasks yet.</p>}
       {tasks.map((task) => (
         <div
           key={task.id}

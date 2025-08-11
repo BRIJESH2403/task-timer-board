@@ -3,7 +3,7 @@ import { useState } from "react";
 const AddTaskForm = ({ addTask }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [time, setTime] = useState("");
+  const [time, setTime] = useState(""); 
   const [showForm, setShowForm] = useState(false);
 
   const handleSubmit = (e) => {
@@ -11,13 +11,13 @@ const AddTaskForm = ({ addTask }) => {
     if (!title || !description) return;
 
     const newTask = {
-      id: Date.now(),
+      id: Date.now().toString(),  
       title,
       description,
-      time: time ? parseInt(time) : null,
-      remainingTime: time ? parseInt(time) * 60 : null,
+      timer: time ? parseInt(time) * 60 : undefined,       
+      remainingTime: time ? parseInt(time) * 60 : undefined,
+      status: "todo",
       isRunning: false,
-      isExpired: false,
     };
 
     addTask(newTask);

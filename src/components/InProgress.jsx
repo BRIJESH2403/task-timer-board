@@ -2,12 +2,17 @@ function InProgress({ tasks, handleDone, togglePause }) {
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-4">In Progress</h2>
+      {tasks.length === 0 && <p>No tasks in progress</p>}
       {tasks.map((task) => {
-        const isTimeSet = task.remainingTime !== null && task.remainingTime !== undefined;
-        const isTimeUp = task.isExpired || (isTimeSet && task.remainingTime <= 0);
+        const isTimeSet =
+          task.remainingTime !== undefined && task.remainingTime !== null;
+        const isTimeUp = isTimeSet && task.remainingTime <= 0;
 
         return (
-          <div key={task.id} className="bg-slate-700 p-4 rounded-lg mb-4 shadow">
+          <div
+            key={task.id}
+            className="bg-slate-700 p-4 rounded-lg mb-4 shadow"
+          >
             <h3 className="text-lg font-bold">{task.title}</h3>
             <p>{task.description}</p>
 
