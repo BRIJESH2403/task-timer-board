@@ -45,40 +45,39 @@ const App = () => {
     setTasks((prev) => prev.filter((task) => task.id !== id));
   };
 
-useEffect(() => {
-  const interval = setInterval(() => {
-    setTasks((prev) =>
-      prev.map((task) => {
-        if (
-          task.status === "in-progress" &&
-          task.isRunning &&
-          task.remainingTime > 0
-        ) {
-          return {
-            ...task,
-            remainingTime: task.remainingTime - 1,
-            timeSpent: (task.timeSpent || 0) + 1,  // increment timeSpent by 1 second
-          };
-        } else if (
-          task.status === "in-progress" &&
-          task.remainingTime === 0 &&
-          task.isRunning
-        ) {
-          return {
-            ...task,
-            isRunning: false,
-            remainingTime: 0,
-            timeSpent: task.timeSpent || 0,
-          };
-        }
-        return task;
-      })
-    );
-  }, 1000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTasks((prev) =>
+        prev.map((task) => {
+          if (
+            task.status === "in-progress" &&
+            task.isRunning &&
+            task.remainingTime > 0
+          ) {
+            return {
+              ...task,
+              remainingTime: task.remainingTime - 1,
+              timeSpent: (task.timeSpent || 0) + 1, // increment timeSpent
+            };
+          } else if (
+            task.status === "in-progress" &&
+            task.remainingTime === 0 &&
+            task.isRunning
+          ) {
+            return {
+              ...task,
+              isRunning: false,
+              remainingTime: 0,
+              timeSpent: task.timeSpent || 0,
+            };
+          }
+          return task;
+        })
+      );
+    }, 1000);
 
-  return () => clearInterval(interval);
-}, []);
-
+    return () => clearInterval(interval);
+  }, []);
 
   const filteredTasks = tasks.filter((task) => {
     const matchesTitle = task.title
@@ -96,6 +95,18 @@ useEffect(() => {
     (task) => task.status === "in-progress"
   );
   const doneTasks = filteredTasks.filter((task) => task.status === "done");
+
+  const formatTime = (seconds) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hrs > 0 ? `${hrs} hr : ` : ""}${mins} min : ${secs} sec`;
+  };
+
+  const totalTimeSpent = tasks.reduce(
+    (total, task) => total + (task.timeSpent || 0),
+    0
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-800 to-gray-900 text-white px-4 py-8">
@@ -120,7 +131,14 @@ useEffect(() => {
           <option value="done">Done</option>
         </select>
       </div>
-
+      <div className="mb-8 p-4 bg-slate-700 rounded shadow max-w-md mx-auto text-center">
+        <h2 className="text-xl font-semibold mb-2">
+          Total Time Spent on All Tasks
+        </h2>
+        <p className="text-green-400 font-mono text-lg">
+          {formatTime(totalTimeSpent)}
+        </p>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <TodoList tasks={todoTasks} startTask={startTask} />
         <InProgress

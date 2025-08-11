@@ -18,6 +18,7 @@ const AddTaskForm = ({ addTask }) => {
       remainingTime: time ? parseInt(time) * 60 : undefined,
       status: "todo",
       isRunning: false,
+      timeSpent: 0,
     };
 
     addTask(newTask);
