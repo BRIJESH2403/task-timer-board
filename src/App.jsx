@@ -106,7 +106,7 @@ const App = () => {
   const totalTimeSpent = tasks.reduce(
     (total, task) => total + (task.timeSpent || 0),
     0
-  );
+  );  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-800 to-gray-900 text-white px-4 py-8">
