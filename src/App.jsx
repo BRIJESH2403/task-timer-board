@@ -45,37 +45,40 @@ const App = () => {
     setTasks((prev) => prev.filter((task) => task.id !== id));
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTasks((prev) =>
-        prev.map((task) => {
-          if (
-            task.status === "in-progress" &&
-            task.isRunning &&
-            task.remainingTime > 0
-          ) {
-            return {
-              ...task,
-              remainingTime: task.remainingTime - 1,
-            };
-          } else if (
-            task.status === "in-progress" &&
-            task.remainingTime === 0 &&
-            task.isRunning
-          ) {
-            return {
-              ...task,
-              isRunning: false,
-              remainingTime: 0,
-            };
-          }
-          return task;
-        })
-      );
-    }, 1000);
+useEffect(() => {
+  const interval = setInterval(() => {
+    setTasks((prev) =>
+      prev.map((task) => {
+        if (
+          task.status === "in-progress" &&
+          task.isRunning &&
+          task.remainingTime > 0
+        ) {
+          return {
+            ...task,
+            remainingTime: task.remainingTime - 1,
+            timeSpent: (task.timeSpent || 0) + 1,  // increment timeSpent by 1 second
+          };
+        } else if (
+          task.status === "in-progress" &&
+          task.remainingTime === 0 &&
+          task.isRunning
+        ) {
+          return {
+            ...task,
+            isRunning: false,
+            remainingTime: 0,
+            timeSpent: task.timeSpent || 0,
+          };
+        }
+        return task;
+      })
+    );
+  }, 1000);
 
-    return () => clearInterval(interval);
-  }, []);
+  return () => clearInterval(interval);
+}, []);
+
 
   const filteredTasks = tasks.filter((task) => {
     const matchesTitle = task.title
