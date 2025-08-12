@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import AddTaskForm from "./components/AddTaskForm";
-import TodoList from "./components/Todolist";
+import TodoList from "./components/TodoList";
 import InProgress from "./components/InProgress";
 import Done from "./components/Done";
 
@@ -98,6 +98,7 @@ const App = () => {
   const inProgressTasks = filteredTasks.filter(
     (task) => task.status === "in-progress"
   );
+
   const doneTasks = filteredTasks.filter((task) => task.status === "done");
 
   const formatTime = (seconds) => {
