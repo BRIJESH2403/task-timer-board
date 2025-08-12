@@ -4,10 +4,7 @@ const TodoList = ({ tasks, startTask }) => {
       <h2 className="text-2xl font-semibold mb-4">Todo</h2>
       {tasks.length === 0 && <p>No tasks here!</p>}
       {tasks.map((task) => (
-        <div
-          key={task.id}
-          className="bg-slate-700 p-4 rounded-lg mb-4 shadow"
-        >
+        <div key={task.id} className="bg-slate-700 p-4 rounded-lg mb-4 shadow">
           <h3 className="text-lg font-bold">{task.title}</h3>
           <p>{task.description}</p>
           <p>

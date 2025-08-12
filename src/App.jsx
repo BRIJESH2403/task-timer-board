@@ -57,7 +57,7 @@ const App = () => {
             return {
               ...task,
               remainingTime: task.remainingTime - 1,
-              timeSpent: (task.timeSpent || 0) + 1, // increment timeSpent
+              timeSpent: (task.timeSpent || 0) + 1,
             };
           } else if (
             task.status === "in-progress" &&
@@ -79,15 +79,19 @@ const App = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const searchLower = searchText.toLowerCase();
+
   const filteredTasks = tasks.filter((task) => {
-    const matchesTitle = task.title
-      .toLowerCase()
-      .includes(searchText.toLowerCase());
+    const titleLower = task.title.toLowerCase();
+    const descriptionLower = (task.description || "").toLowerCase();
+    const matchesText =
+      titleLower.includes(searchLower) ||
+      descriptionLower.includes(searchLower);
 
     const matchesStatus =
       statusFilter === "all" ? true : task.status === statusFilter;
 
-    return matchesTitle && matchesStatus;
+    return matchesText && matchesStatus;
   });
 
   const todoTasks = filteredTasks.filter((task) => task.status === "todo");
@@ -106,7 +110,7 @@ const App = () => {
   const totalTimeSpent = tasks.reduce(
     (total, task) => total + (task.timeSpent || 0),
     0
-  );  
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-800 to-gray-900 text-white px-4 py-8">

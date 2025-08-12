@@ -64,7 +64,7 @@ const AddTaskForm = ({ addTask }) => {
               />
               <input
                 type="number"
-                min="1"
+                min="0"
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
                 placeholder="Time (minutes)"
